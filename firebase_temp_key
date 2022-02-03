@@ -1,0 +1,20 @@
+"Main": {
+      "apiKey": "AIzaSyBbR5KzHNE57_u2qVsQt5Xmca7zF9kQiOc",
+      "authDomain": "goal-setting-survey.firebaseapp.com",
+      "databaseURL": "https://goal-setting-survey.firebaseio.com",
+      "projectId": "goal-setting-survey",
+      "storageBucket": "goal-setting-survey.appspot.com",
+      "messagingSenderId": "890595769263",
+      "appId": "1:890595769263:web:5d616ff93d212ae89d0d5a",
+      "measurementId": "G-X67K645TCX"
+    },
+
+"Staging": {
+      "apiKey": "AIzaSyAKhpJkIlbo-4ZkyNgKSx5T72Qbtr6KgVA",
+      "authDomain": "goal-setting-staging.firebaseapp.com",
+      "databaseURL": "https://goal-setting-staging.firebaseio.com",
+      "projectId": "goal-setting-staging",
+      "storageBucket": "goal-setting-staging.appspot.com",
+      "messagingSenderId": "869281364052",
+      "appId": "1:869281364052:web:77e70485439ec1906855c1"
+    },

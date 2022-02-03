@@ -1,0 +1,8 @@
+node_modules
+.firebaserc
+firebase.json
+/build/**
+hosting.**
+.idea/
+package-lock.json
+yarn.lock
