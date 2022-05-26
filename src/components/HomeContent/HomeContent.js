@@ -15,6 +15,33 @@ class HomeContent extends Component {
         };
     }
 
+    //fetchGroup can be used for a goal-setting study redirect provided that the participants are assigned to a group.
+    //New sign-ups are assigned to a group in SignUpDialog.js
+    //Change the URLs/Routes below to redirect to the correct quizzes
+    fetchGroup = () => {
+        let group;
+        let ref;
+    
+        ref = firestore.collection("userID").doc(localStorage.getItem('hash')).get().then( (doc) => {
+          if (doc.exists) {
+            group = doc.data()['group'];
+            if(group == "goal-setting") {
+                //CHANGE THIS ROUTE IF YOU WANT THE REDIRECT TO WORK!!!
+                this.props.history.push("/blockGroup/Goal-Setting-2022");
+            }
+            else if (group == "control"){
+                //CHANGE THIS ROUTE IF YOU WANT THE REDIRECT TO WORK!!!
+                this.props.history.push("/blockGroup/Self-Reflection-2022");
+            }
+            //console.log(group);
+          } else {
+            group = "";
+            console.log("Error getting group!");
+          }
+        })
+        return group;
+      }
+
     quizDocumentsReference = firestore.collection("quizs");
 
     signInWithEmailLink = () => {
@@ -79,6 +106,14 @@ class HomeContent extends Component {
         if (user) {
             return this.SignedInContent();
         }
+        
+        //Uncomment the lines below to enable the goal-setting redirect
+        /*
+        if(user !== null && auth.currentUser !== null && localStorage.getItem("hash") !== null) {
+            this.fetchGroup();
+            return null;
+        }
+        */
 
         return (
             <EmptyState
@@ -99,16 +134,16 @@ class HomeContent extends Component {
     componentDidMount() {
         this.signInWithEmailLink();
 
-        // this.quizDocumentsReference.get().then(querySnapshot => {
-        //     let resList = [];
-        //     querySnapshot.forEach((doc, index) => {
-        //         resList.push(
-        //             <QuizCard key={index + new Date()} title={doc.data().title}/>
-        //         );
-        //     });
-        //
-        //     this.setState({quizList: resList});
-        // });
+        this.quizDocumentsReference.get().then(querySnapshot => {
+            let resList = [];
+            querySnapshot.forEach((doc, index) => {
+                resList.push(
+                    <QuizCard key={index + new Date()} title={doc.data().title}/>
+                );
+            });
+        
+            this.setState({quizList: resList});
+        });
     }
 }
 

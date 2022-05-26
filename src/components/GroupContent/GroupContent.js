@@ -45,8 +45,10 @@ var storageRef = storage.ref();
 function GroupContent(props) {
     const { blockGroupTitle, blockTitle, quizGroupTitle } = { ...props.location.state }
     const groupDocumentReference = firestore.collection("quizGroups").doc(quizGroupTitle);
-    const existingResults = firestore.collection("userID").doc(localStorage.getItem("hash"));
-
+    let existingResults = null;
+    if(auth.currentUser !== null && localStorage.getItem("hash") !== null){
+        existingResults = firestore.collection("userID").doc(localStorage.getItem("hash"));
+    }
     const classes = useStyles();
 
     const defaultState = {
@@ -95,7 +97,7 @@ function GroupContent(props) {
                 let ref = storageRef.child(uploadURL);
                 let snapshot = await ref.put(blob);
                 let downloadURL = await snapshot.ref.getDownloadURL();
-                setURL(downloadURL);
+                //setURL(downloadURL);
             });
         };
 
@@ -104,7 +106,7 @@ function GroupContent(props) {
 
     useEffect(() => {
         //Set up recorder
-        navigator.mediaDevices
+        /*navigator.mediaDevices
             .getUserMedia({
                 video: true,
                 audio: true,
@@ -115,24 +117,29 @@ function GroupContent(props) {
                     mimeType: "video/webm",
                 }))
             });
+            */
 
         //Fetch details on the quizGroup to be loaded
         async function getGroupDetails() {
             let doc = await groupDocumentReference.get();
             let data = doc.data();
 
-            let uData = (await existingResults.get()).data();
+            let uData = undefined;
 
             let completedQuiz = [];
-
-            if (uData.results !== undefined && uData.results[blockGroupTitle] != undefined && uData.results[blockGroupTitle][blockTitle] != undefined && uData.results[blockGroupTitle][blockTitle][quizGroupTitle] !== undefined)
-                completedQuiz = Object.keys(uData.results[blockGroupTitle][blockTitle][quizGroupTitle]);
-
             let isCompleted = false;
-            if (completedQuiz.length === Object.keys(data.content).length) {
-                setCompleted(blockGroupTitle, blockTitle, quizGroupTitle, uData);
-                isCompleted = true;
-            }
+
+            if (auth.currentUser !== null) {
+                uData = (await existingResults.get()).data();
+
+                if (uData.results !== undefined && uData.results[blockGroupTitle] != undefined && uData.results[blockGroupTitle][blockTitle] != undefined && uData.results[blockGroupTitle][blockTitle][quizGroupTitle] !== undefined)
+                    completedQuiz = Object.keys(uData.results[blockGroupTitle][blockTitle][quizGroupTitle]);
+       
+                if (completedQuiz.length === Object.keys(data.content).length) {
+                    setCompleted(blockGroupTitle, blockTitle, quizGroupTitle, uData);
+                    isCompleted = true;
+                }
+             }
 
             let newState = {
                 title: data.title,

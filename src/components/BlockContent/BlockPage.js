@@ -3,7 +3,7 @@ import { Breadcrumbs, Link, Typography } from "@material-ui/core";
 import { Link as RouterLink } from 'react-router-dom';
 import { MemoryRouter as Router } from 'react-router';
 import Box from "@material-ui/core/Box";
-import { firestore } from "../../firebase";
+import { auth, firestore } from "../../firebase";
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -96,14 +96,19 @@ function BlockPage(props) {
 
         const fetchBlock = async () => {
             let blockGroups = await groupDocumentReference.get();
-            let completeList = await getCompletedList(props.location.state.blockGroupTitle, props.location.state.blockTitle);
+            let completeList = [];
+            if(auth.currentUser !== null) {
+                completeList = await getCompletedList(props.location.state.blockGroupTitle, props.location.state.blockTitle);
+            }
 
             blockGroups.forEach((doc) => {
                 let blockGroup = doc.data();
                 if (blockGroup.title === props.location.state.blockGroupTitle.replace(/_/g, ' ')) {
                     blockGroup.blockList.forEach(block => {
                         if (block.title === props.location.state.blockTitle) {
-                            setCompleted(props.location.state.blockGroupTitle, block.title, completeList, block.content);
+                            if(auth.currentUser !== null) {
+                                setCompleted(props.location.state.blockGroupTitle, block.title, completeList, block.content);
+                            }
                             const setBlockContent = async () => {
                                 if(block.random) block.content = await setOrder(block.content, props.location.state.blockGroupTitle, block.title);
                                 setState({ ...block, group: props.location.state.blockGroupTitle, completedList: completeList })

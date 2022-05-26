@@ -43,7 +43,9 @@ function BlockContent(props) {
     let gr = window.location.toString().split("/blockGroup/")[1]
     let group = gr.replace(/_/g, ' ');
     const groupDocumentReference = firestore.collection("blockGroups");
-    const existingResults = firestore.collection("userID").doc(localStorage.getItem("hash"));
+    
+    //const existingResults = firestore.collection("userID").doc(localStorage.getItem("hash"));
+    
     const classes = useStyles();
 
     const defaultState = {
@@ -64,7 +66,7 @@ function BlockContent(props) {
         }
     }
 
-    async function setURL(uploadURL) {
+    /*async function setURL(uploadURL) {
         let userDoc = (await existingResults.get()).data();
 
         if (userDoc.result === undefined)
@@ -76,7 +78,7 @@ function BlockContent(props) {
         userDoc.result[gr]["video_url"] = uploadURL;
         existingResults.update(userDoc);
     }
-
+    
     function stopRecording() {
         const tempFunc = async () => {
             await recorder.stopRecording(async function () {
@@ -85,14 +87,16 @@ function BlockContent(props) {
                 let ref = storageRef.child(uploadURL);
                 let snapshot = await ref.put(blob);
                 let downloadURL = await snapshot.ref.getDownloadURL();
-                setURL(downloadURL);
+                //setURL(downloadURL);
             });
         };
 
         tempFunc();
     }
+    */
 
     useEffect(() => {
+        /*
         //Set up recorder
         navigator.mediaDevices
             .getUserMedia({
@@ -105,10 +109,14 @@ function BlockContent(props) {
                     mimeType: "video/webm",
                 }))
             });
+            */
 
         async function getGroupDetails() {
             const bg = await groupDocumentReference.get();
-            let completedList = await getCompletedList(gr);
+            let completedList = [];
+            if(auth.currentUser !== null ) {
+                completedList = await getCompletedList(gr);
+            }
 
             let newState;
             bg.forEach((doc) => {
@@ -140,19 +148,19 @@ function BlockContent(props) {
                             <Typography variant="h5" component="h2">
                                 {state.title.replace(/_/g, ' ')}
                             </Typography>
-                            {state.video_url != undefined && <TestVideo />}
+                            {/*state.video_url != undefined && <TestVideo />*/}
                         </Box>
                         <Typography variant="body1" component="pre" style={{ whiteSpace: "pre-wrap" }}>
                             {state.description}
                         </Typography>
                         <br />
-                        {state.video_url != undefined &&
+                        {/*state.video_url != undefined &&
                             <CustomVideoComponent
                                 recordingEnabled={true}
                                 mediaURL={state.video_url}
                                 record={() => { recordFunction() }}
                                 stopRecording={() => { stopRecording() }}
-                                width={"100%"} />}
+                                width={"100%"} />*/}
                     </Box>
                 </Card>
             </Box>

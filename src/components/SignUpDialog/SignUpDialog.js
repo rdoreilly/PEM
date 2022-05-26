@@ -32,6 +32,9 @@ import {firestore} from "../../firebase";
 const collectionReference = firestore
       .collection("userID");
 
+const counterCollectionReference = firestore.collection("groupControl");
+
+let counter;
 
 const styles = theme => ({
   closeButton: {
@@ -65,7 +68,16 @@ const initialState = {
 class SignUpDialog extends Component {
   constructor(props) {
     super(props);
-
+    //Used for automatically assigning people to goal-setting or control groups
+    //See code related to signup below for more group assignment details
+    counterCollectionReference.doc('counter').get().then( (doc) => {
+      if (doc.exists) {
+        counter = doc.data()['count'];
+        console.log(counter);
+      } else {
+        console.log("Error getting count");
+      }
+    });
     this.state = initialState;
   }
 
@@ -111,7 +123,29 @@ class SignUpDialog extends Component {
 
               collectionReference.doc(hash).set({email: "hidden"});
 
+            })
+            .then(value => {
+              //Group Assignment
+              //If 'count' is even then the person is assigned to the goal-setting group.
+              //If 'count' is odd then the person is assigned to the control group.
+              //The group wont do anything unless you use it elsewhere.
+              //See the commented out code in HomeContent for a group redirect solution.
+              let group = "";
+              if(counter % 2 === 0) {
+                group = "goal-setting";
+              }
+              else {
+                group = "control";
+              }
+
+              localStorage.setItem('group', group);
+              let hash = localStorage.getItem('hash');
+              collectionReference.doc(hash).set({group: group});
+              counter = counter +1;
+              counterCollectionReference.doc('counter').set({count: counter});
+
               this.props.dialogProps.onClose();
+
             })
             .catch(reason => {
               const code = reason.code;
