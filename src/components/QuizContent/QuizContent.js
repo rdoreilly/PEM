@@ -163,7 +163,7 @@ class QuizContent extends Component {
       await that.recorder.startRecording();
     }
 
-    navigator.mediaDevices
+    /*navigator.mediaDevices
       .getUserMedia({
         video: true,
         audio: true,
@@ -177,6 +177,7 @@ class QuizContent extends Component {
         });
 
       });
+      */
   }
 
   resetState() {
@@ -586,7 +587,7 @@ class QuizContent extends Component {
                 {this.state.data.title !== undefined && <Typography variant="h5" component="h2">
                   {this.state.data.title.replace(/_/g, ' ')}
                 </Typography>}
-                {this.state.description_recording &&
+                {/*this.state.description_recording &&
                   <div style={{ display: "flex", columnCount: 2, columnGap: "10px" }}>
                     <TestVideo />
                     {(this.state.media_url == null || this.state.media_url == undefined) &&
@@ -601,10 +602,9 @@ class QuizContent extends Component {
                             this.stopRecording();
                         }}>
                         {(this.state.recording !== "description") ? "Begin Recording" : "Stop Recording"}
-                      </Button>}
+                      </Button>*/}
                   </div>
-                }
-              </div>
+
               <Typography
                 variant="body1"
                 component="pre"

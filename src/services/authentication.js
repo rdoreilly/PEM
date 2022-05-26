@@ -445,7 +445,7 @@ authentication.signOut = () => {
       .signOut()
       .then(value => {
         analytics.logEvent("sign_out");
-
+        localStorage.clear();
         resolve(value);
       })
       .catch(reason => {
