@@ -1,4 +1,4 @@
-Personality Emotion Model (PEM) Workflow
+Personality Emotion Mapping (PEM) Model
 
 **React.js** project designed as part of an online platform that enables students to participate in multi-modal surveys.
 
